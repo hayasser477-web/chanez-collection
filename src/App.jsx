@@ -17,8 +17,8 @@ import AboutUs from "./assets/components/AboutUs/AboutUs";
 import SocialLinks from "./assets/components/SocialLinks/SocialLinks";
 import BackToTop from "./assets/components/BackToTop/BackToTop";
 import Collection from "./assets/components/Collection/Collection.jsx";
-import Cart from "./assets/components/cart/Cart";
-import ThankYou from "./assets/components/cart/ThankYou";
+import Cart from "./assets/components/Cart/Cart";
+import ThankYou from "./assets/components/Cart/ThankYou";
 
 function MainLayout() {
   return (
