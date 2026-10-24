@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Intro from "./assets/components/intro/Intro.jsx";
+import Intro from "./assets/components/Intro/Intro.jsx";
 import LuxuryBackground from "./assets/components/background/LuxuryBackground.jsx";
 import Navbar from "./assets/components/navbar/Navbar.jsx";
-import PetalFall from "./assets/components/petals/PetalFall.jsx";
-import Home from "./assets/components/home/Home.jsx";
-import Testimonials from "./assets/components/testimonials/Testimonials.jsx";
+import PetalFall from "./assets/components/Petals/PetalFall.jsx";
+import Home from "./assets/components/Home/Home.jsx";
+import Testimonials from "./assets/components/Testimonials/Testimonials.jsx";
 import CTA from "./assets/components/CTA/CTA.jsx";
 import Footer from "./assets/components/Footer/Footer.jsx";
 import PrivacyPolicy from "./assets/components/PrivacyPolicy/PrivacyPolicy.jsx";
