@@ -1,9 +1,57 @@
 
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Footer.css";
 import product1 from "../../images/img (2).webp";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // الانتقال إلى قسم داخل الصفحة الرئيسية
+  function goToSection(event, sectionId) {
+    event.preventDefault();
+
+    // إذا كنت بالفعل في الصفحة الرئيسية
+    if (location.pathname === "/") {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+
+        window.history.replaceState(null, "", `/#${sectionId}`);
+      }
+
+      return;
+    }
+
+    // إذا كنت في صفحة أخرى، انتقل إلى الرئيسية ثم إلى القسم
+    navigate(`/#${sectionId}`);
+  }
+
+  // الوصول إلى القسم المطلوب بعد الانتقال إلى الصفحة الرئيسية
+  useEffect(() => {
+    if (location.pathname !== "/" || !location.hash) return;
+
+    const sectionId = location.hash.slice(1);
+
+    const timeout = setTimeout(() => {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 150);
+
+    return () => clearTimeout(timeout);
+  }, [location.pathname, location.hash]);
 
   return (
     <footer className="footer">
@@ -11,7 +59,11 @@ export default function Footer() {
 
         {/* Brand */}
         <div className="footer__brand">
-          <a href="#home" className="footer__logo">
+          <a
+            href="/#home"
+            className="footer__logo"
+            onClick={(event) => goToSection(event, "home")}
+          >
             <span className="footer__logo-main">CHANEZ</span>
             <span className="footer__logo-sub">COLLECTION</span>
           </a>
@@ -21,7 +73,7 @@ export default function Footer() {
           </p>
 
           <p className="footer__description">
-           اكتشفي مجموعة من الأفكار التي تضفي لمسة من الروعة
+            اكتشفي مجموعة من الأفكار التي تضفي لمسة من الروعة
             اطّلعي عليها فوراً واستعد أناقتك.
           </p>
         </div>
@@ -47,22 +99,43 @@ export default function Footer() {
 
           <ul className="footer__links">
             <li>
-              <a href="#home">الرئيسية</a>
+              <a
+                href="/#home"
+                onClick={(event) => goToSection(event, "home")}
+              >
+                الرئيسية
+              </a>
             </li>
+
             <li>
               <a href="/collection">منتجاتنا</a>
             </li>
+
             <li>
-              <a href="#testimonials">اراء زبائننا</a>
+              <a
+                href="/#testimonials"
+                onClick={(event) =>
+                  goToSection(event, "testimonials")
+                }
+              >
+                اراء زبائننا
+              </a>
             </li>
+
             <li>
               <a href="/contact">تواصلي معنا</a>
             </li>
+
             <li>
-              <a href="/politique-confidentialite">سياسة الخصوصية</a>
+              <a href="/politique-confidentialite">
+                سياسة الخصوصية
+              </a>
             </li>
+
             <li>
-              <a href="/mentions-legales">المعلومات القانونية</a>
+              <a href="/mentions-legales">
+                المعلومات القانونية
+              </a>
             </li>
           </ul>
         </div>
@@ -80,7 +153,7 @@ export default function Footer() {
           </h3>
 
           <p className="footer__cta-text">
-            اعثري على ما سيخطف قلبك 
+            اعثري على ما سيخطف قلبك
             ضمن تشكيلتنا.
           </p>
 
