@@ -134,7 +134,7 @@ export default function Collection() {
   const [filter, setFilter] = useState("all");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("M");
+  const [selectedSize, setSelectedSize] = useState("");
   const [likes, setLikes] = useState({});
   const [likedProducts, setLikedProducts] = useState([]);
   const [popularCounts, setPopularCounts] = useState({});
@@ -274,14 +274,19 @@ export default function Collection() {
     }
   }
 
-  function openProduct(product) {
-    setSelectedProduct(product);
-    setSelectedImage(0);
-    setSelectedSize("M");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+ function openProduct(product) {
+  setSelectedProduct(product);
+  setSelectedImage(0);
+  setSelectedSize("");
+  setNotice("");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
   async function addToCart(product) {
+     if (!selectedSize) {
+    setNotice("يرجى اختيار المقاس أولًا قبل إضافة القطعة إلى السلة.");
+    return;
+  }
     const cartItem = {
       productId: product.id,
       model: product.model,
@@ -520,10 +525,11 @@ export default function Collection() {
                         type="button"
                         className="product-card__quick-add"
                         onClick={() => {
-                          setSelectedProduct(product);
-                          setSelectedImage(0);
-                          setSelectedSize("M");
-                        }}
+  setSelectedProduct(product);
+  setSelectedImage(0);
+  setSelectedSize("");
+  setNotice("");
+}}
                       >
                         اكتشفي القطعة
                         <ArrowLeft size={15} />

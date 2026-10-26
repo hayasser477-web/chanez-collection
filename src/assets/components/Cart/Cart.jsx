@@ -62,7 +62,7 @@ const DELIVERY_FEES = [
   { wilaya: "Biskra", home: 1000, office: 600 },
   { wilaya: "Ghardaïa", home: 1100, office: 700 },
   { wilaya: "El Oued", home: 1100, office: 700 },
-  { wilaya: "El M'Ghair", home: 1100, office: "null" },
+  { wilaya: "El M'Ghair", home: 1100, office: null },
   { wilaya: "Ouargla", home: 1100, office: 700 },
   { wilaya: "Touggourt", home: 1100, office: 700 },
   { wilaya: "El Meniaa", home: 1100, office: 800 },
@@ -164,6 +164,7 @@ export default function Cart() {
     note: "",
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const productsTotal = useMemo(
     () =>
@@ -213,8 +214,11 @@ const total =
     saveCart(cart.filter((_, itemIndex) => itemIndex !== index));
   }
 
-  function submitOrder(event) {
-    event.preventDefault();
+  async function submitOrder(event) {
+  event.preventDefault();
+
+  if (isSubmitting) return;
+  setIsSubmitting(true);
 
     if (!cart.length) {
       setError("سلتك فارغة. أضيفي المنتجات أولًا.");
@@ -235,26 +239,73 @@ const total =
       setError("رقم الهاتف يجب أن يتكوّن من 10 أرقام بالضبط.");
       return;
     }
-    if (deliveryFee === null || deliveryFee === undefined) {
+   if (deliveryFee === null || deliveryFee === undefined) {
   setError(
     "عذرًا، سعر التوصيل لهذه الولاية أو الطريقة غير متوفر حاليًا."
   );
+  setIsSubmitting(false);
   return;
 }
 
     const order = {
       ...form,
-      items: cart,
+      items: cart.map((item) => ({
+  ...item,
+  model: Number(item.model) || Number(String(item.productId || "").split("-")[1]) || 1,
+})),
       productsTotal,
       deliveryFee,
       total,
       createdAt: new Date().toISOString(),
     };
 
-    // حفظ مؤقت محليًا. هذا لا يرسل الطلب إلى صاحب المتجر.
-    localStorage.setItem("chanez_last_order", JSON.stringify(order));
+    setError("");
 
-    navigate("/thank-you");
+    // حفظ مؤقت محليًا. هذا لا يرسل الطلب إلى صاحب المتجر.
+    const API_URL =
+  "https://script.google.com/macros/s/AKfycbwiWIgz9j_mXv1Pf2HDlevXbSbemzSNKHjr6Pje6Npuy7O1ygSDWBURzm93IpxJqoafcQ/exec";
+
+try {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8",
+    },
+    body: JSON.stringify({
+      first_name: form.firstName,
+      last_name: form.lastName,
+      phone: form.phone,
+      wilaya: form.wilaya,
+      municipality: form.municipality,
+      delivery_type: form.delivery,
+      items: cart,
+      productsTotal,
+      deliveryFee,
+      total,
+      note: form.note,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error("تعذّر حفظ الطلب");
+  }
+
+ localStorage.setItem("chanez_last_order", JSON.stringify(order));
+
+// تفريغ السلة بعد نجاح حفظ الطلب
+localStorage.removeItem("chanez_cart");
+setCart([]);
+
+navigate("/thank-you");
+} catch (error) {
+  console.error("Order submission failed:", error);
+  setError("لم نتمكن من إرسال طلبك. يرجى المحاولة مرة أخرى.");
+  setIsSubmitting(false);
+}
+
+  
   }
 
   return (
@@ -503,13 +554,21 @@ const total =
               </p>
             )}
 
-            <button
-              type="submit"
-              className="cart-submit"
-              disabled={!cart.length}
-            >
-              تأكيد الطلبية <ArrowLeft size={18} />
-            </button>
+           <button
+  type="submit"
+  className="cart-submit"
+  disabled={!cart.length || isSubmitting}
+>
+  {isSubmitting ? (
+    <>
+      جارٍ تأكيد الطلبية...
+    </>
+  ) : (
+    <>
+      تأكيد الطلبية <ArrowLeft size={18} />
+    </>
+  )}
+</button>
 
             <p className="cart-secure-note">
               سنتواصل معكِ لتأكيد تفاصيل طلبكِ.
