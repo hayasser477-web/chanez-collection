@@ -36,13 +36,17 @@ import image20 from "../../images/img (20).webp";
 import image21 from "../../images/img (21).webp";
 import image22 from "../../images/img (22).webp";
 import image23 from "../../images/img (23).webp";
-
+import image24 from "../../images/img (70).jpg";
+import image25 from "../../images/img (71).jpg";
+import image26 from "../../images/img (72).jpg";
+import image27 from "../../images/img (73).jpg";
 const imageList = [
   image1, image2, image3, image4, image5,
   image6, image7, image8, image9, image10,
   image11, image12, image13, image14, image15,
   image16, image17, image18, image19, image20,
-  image21, image22, image23,
+  image21, image22, image23,image24,
+  image25, image26, image27,
 ];
 
 // بيانات أولية قابلة للتعديل.
@@ -107,6 +111,16 @@ const products = [
       "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image15, image16, image17,image18],
+  },
+  {
+    id: "chanez-7",
+    model: 4,
+    color: "blanc",
+    price: 5000,
+    description:
+      "ensemble 3 pieces",
+    sizes: ["38-40", "42-44", "46-48"],
+    images: [image24, image25, image26,image27],
   },
 ];
 
