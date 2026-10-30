@@ -67,37 +67,37 @@ const imageList = [
 const products = [
   {
     id: "chanez-1",
-    model: 1,
+    model: "1 Ensemble katrin",
     color: "jean clair",
     price: 5600,
     description:
-      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
+      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. robe jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image1, image4, image5],
   },
   {
     id: "chanez-2",
-    model: 1,
+    model: "1 Ensemble katrin",
     color: "jean fonce",
     price: 5600,
     description:
-      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
+      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. robe jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image8, image6, image7, image9],
   },
   {
     id: "chanez-3",
-    model: 2,
+    model: "2 Robe en jean chinoise",
     color: "jean clair",
     price: 4600,
     description:
-      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
+      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. robe jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image12, image11, image10],
   },
   {
     id: "chanez-4",
-    model: 2,
+    model: "2 Robe en jean chinoise",
     color: "jean fonce",
     price: 4600,
     description:
@@ -107,28 +107,27 @@ const products = [
   },
   {
     id: "chanez-5",
-    model: 3,
+    model: "3 Robe 100 % jean",
     color: "jean clair",
     price: 4600,
     description:
-      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
+      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. robe jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image21, image22],
   },
   {
     id: "chanez-6",
-    model: 3,
+    model: "3 Robe 100 % jean",
     color: "jean fonce",
     price: 4600,
     description:
-      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. tissu jean 100%",
+      "قطعة أنيقة من CHANEZ COLLECTION تجمع بين جمال التصميم والاهتمام بالتفاصيل. robe jean 100%",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image15, image16, image17,image18],
   },
   {
     id: "chanez-7",
-    model: 4,
-    color: "blanc",
+    model: "4 Ensemble Maria" ,
     price: 5000,
     description:
       "ensemble 3 pieces",
@@ -137,8 +136,8 @@ const products = [
   },
   {
     id: "chanez-8",
-    model: 5,
-    color: "rose foshia",
+    model: "5 ensemble ruby",
+    color: "Burgundy",
     price: 4800,
     description:
       "ensemble ruby",
@@ -147,8 +146,8 @@ const products = [
   },
   {
     id: "chanez-9",
-    model: 5,
-    color: "jean fonce",
+    model: "5 ensemble ruby",
+    color: "bleu nuit",
     price: 4800,
     description:
       "ensemble ruby",
@@ -157,7 +156,7 @@ const products = [
   },
   {
     id: "chanez-7",
-    model: 5,
+    model: "5 ensemble ruby",
     color: "noir",
     price: 4800,
     description:
