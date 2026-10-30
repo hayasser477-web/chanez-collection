@@ -40,6 +40,16 @@ import image24 from "../../images/img (70).jpg";
 import image25 from "../../images/img (71).jpg";
 import image26 from "../../images/img (72).jpg";
 import image27 from "../../images/img (73).jpg";
+import image28 from "../../images/img (74).jpg";
+import image29 from "../../images/img (75).jpg";
+import image30 from "../../images/img (76).jpg";
+import image31 from "../../images/img (77).jpg";
+import image32 from "../../images/img (78).jpg";
+import image33 from "../../images/img (79).jpg";
+import image34 from "../../images/img (80).jpg";
+import image35 from "../../images/img (81).jpg";
+import image36 from "../../images/img (82).jpg";
+import image37 from "../../images/img (83).jpg";
 const imageList = [
   image1, image2, image3, image4, image5,
   image6, image7, image8, image9, image10,
@@ -47,6 +57,9 @@ const imageList = [
   image16, image17, image18, image19, image20,
   image21, image22, image23,image24,
   image25, image26, image27,
+  image28, image29, image30,image31,
+  image32, image33, image34,
+  image35, image36, image37,
 ];
 
 // بيانات أولية قابلة للتعديل.
@@ -121,6 +134,36 @@ const products = [
       "ensemble 3 pieces",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image24, image25, image26,image27],
+  },
+  {
+    id: "chanez-8",
+    model: 5,
+    color: "rose foshia",
+    price: 4800,
+    description:
+      "ensemble ruby",
+    sizes: ["38-40", "42-44", "46-48"],
+    images: [image28, image29, image30],
+  },
+  {
+    id: "chanez-9",
+    model: 5,
+    color: "jean fonce",
+    price: 4800,
+    description:
+      "ensemble ruby",
+    sizes: ["38-40", "42-44", "46-48"],
+    images: [image31, image32, image33],
+  },
+  {
+    id: "chanez-7",
+    model: 5,
+    color: "noir",
+    price: 4800,
+    description:
+      "ensemble ruby",
+    sizes: ["38-40", "42-44", "46-48"],
+    images: [image34, image35, image36, image37],
   },
 ];
 
