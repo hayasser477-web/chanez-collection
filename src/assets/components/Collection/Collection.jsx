@@ -64,7 +64,7 @@ const imageList = [
 
 // بيانات أولية قابلة للتعديل.
 // كل صورة مستقلة إلى أن نحدد الصور التي تخص اللون نفسه.
-const products = [
+const legacyProducts = [
   {
     id: "chanez-1",
     model: "1 Ensemble katrin",
@@ -155,7 +155,7 @@ const products = [
     images: [image31, image32, image33],
   },
   {
-    id: "chanez-7",
+    id: "chanez-10",
     model: "5 ensemble ruby",
     color: "noir",
     price: 4800,
@@ -186,7 +186,58 @@ function formatPrice(price) {
 
 export default function Collection() {
   const navigate = useNavigate();
+  const [databaseProducts, setDatabaseProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [productsError, setProductsError] = useState("");
 
+  useEffect(() => {
+    let active = true;
+
+    async function loadProducts() {
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          throw error;
+        }
+
+        if (!active) return;
+
+        const formattedProducts = (data || []).map((product) => ({
+          id: `db-${product.id}`,
+          databaseId: product.id,
+          model: product.model,
+          color: product.color || "",
+          price: Number(product.price) || 0,
+          description: product.description || "",
+          sizes: Array.isArray(product.sizes) ? product.sizes : [],
+          images: Array.isArray(product.images) ? product.images : [],
+        }));
+
+        setDatabaseProducts(formattedProducts);
+        setProductsError("");
+      } catch (error) {
+        console.error("Could not load Supabase products:", error);
+
+        if (active) {
+          setProductsError("تعذر تحميل المنتجات الجديدة");
+        }
+      } finally {
+        if (active) {
+          setLoadingProducts(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      active = false;
+    };
+  }, []);
   const [filter, setFilter] = useState("all");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -253,7 +304,9 @@ export default function Collection() {
       active = false;
     };
   }, []);
-
+  const products = useMemo(() => {
+    return [...legacyProducts, ...databaseProducts];
+  }, [databaseProducts]);
   const visibleProducts = useMemo(() => {
     if (filter === "popular") {
       return products
@@ -266,7 +319,7 @@ export default function Collection() {
     }
 
     return products;
-  }, [filter, popularCounts]);
+  }, [filter, popularCounts, products]);
 
   const groupedProducts = useMemo(() => {
     return visibleProducts.reduce((groups, product) => {
@@ -279,56 +332,80 @@ export default function Collection() {
     }, {});
   }, [visibleProducts]);
 
-  async function toggleLike(productId) {
-    if (loadingLikes) return;
+   async function toggleLike(productId) {
+  if (loadingLikes) return;
 
-    setLoadingLikes(true);
+  if (String(productId).startsWith("db-")) {
+    const isLiked = likedProducts.includes(productId);
 
-    try {
-      const visitorId = getVisitorId();
-      const isLiked = likedProducts.includes(productId);
+    if (isLiked) {
+      setLikedProducts((previous) =>
+        previous.filter((id) => id !== productId)
+      );
 
-      if (isLiked) {
-        const { error } = await supabase
-          .from("product_likes")
-          .delete()
-          .eq("product_id", productId)
-          .eq("visitor_id", visitorId);
+      setLikes((previous) => ({
+        ...previous,
+        [productId]: Math.max(0, (previous[productId] || 0) - 1),
+      }));
+    } else {
+      setLikedProducts((previous) => [...previous, productId]);
 
-        if (error) throw error;
-
-        setLikedProducts((previous) =>
-          previous.filter((id) => id !== productId)
-        );
-
-        setLikes((previous) => ({
-          ...previous,
-          [productId]: Math.max(0, (previous[productId] || 0) - 1),
-        }));
-      } else {
-        const { error } = await supabase
-          .from("product_likes")
-          .insert({
-            product_id: productId,
-            visitor_id: visitorId,
-          });
-
-        if (error) throw error;
-
-        setLikedProducts((previous) => [...previous, productId]);
-
-        setLikes((previous) => ({
-          ...previous,
-          [productId]: (previous[productId] || 0) + 1,
-        }));
-      }
-    } catch (error) {
-      console.error("Like action failed:", error);
-      setNotice("تعذر تحديث الإعجاب. حاولي مرة أخرى.");
-    } finally {
-      setLoadingLikes(false);
+      setLikes((previous) => ({
+        ...previous,
+        [productId]: (previous[productId] || 0) + 1,
+      }));
     }
+
+    return;
   }
+
+  setLoadingLikes(true);
+
+  try {
+    const visitorId = getVisitorId();
+    const isLiked = likedProducts.includes(productId);
+
+    if (isLiked) {
+      const { error } = await supabase
+        .from("product_likes")
+        .delete()
+        .eq("product_id", productId)
+        .eq("visitor_id", visitorId);
+
+      if (error) throw error;
+
+      setLikedProducts((previous) =>
+        previous.filter((id) => id !== productId)
+      );
+
+      setLikes((previous) => ({
+        ...previous,
+        [productId]: Math.max(0, (previous[productId] || 0) - 1),
+      }));
+    } else {
+      const { error } = await supabase
+        .from("product_likes")
+        .insert({
+          product_id: productId,
+          visitor_id: visitorId,
+        });
+
+      if (error) throw error;
+
+      setLikedProducts((previous) => [...previous, productId]);
+
+      setLikes((previous) => ({
+        ...previous,
+        [productId]: (previous[productId] || 0) + 1,
+      }));
+    }
+  } catch (error) {
+    console.error("Like action failed:", error);
+    setNotice("تعذر تحديث الإعجاب حاولي مرة أخرى");
+  } finally {
+    setLoadingLikes(false);
+  }
+}
 
  function openProduct(product) {
   setSelectedProduct(product);
@@ -338,40 +415,43 @@ export default function Collection() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-  async function addToCart(product) {
-     if (!selectedSize) {
-    setNotice("يرجى اختيار المقاس أولًا قبل إضافة القطعة إلى السلة.");
+ async function addToCart(product) {
+  if (!selectedSize) {
+    setNotice("يرجى اختيار المقاس أولًا قبل إضافة القطعة إلى السلة");
     return;
   }
-    const cartItem = {
-      productId: product.id,
-      model: product.model,
-      color: product.color,
-      price: product.price,
-      size: selectedSize,
-      image: product.images[0],
-      quantity: 1,
+
+  const cartItem = {
+    productId: product.id,
+    model: product.model,
+    color: product.color,
+    price: product.price,
+    size: selectedSize,
+    image: product.images[0],
+    quantity: 1,
+  };
+
+  const updatedCart = [...cart];
+
+  const existingIndex = updatedCart.findIndex(
+    (item) =>
+      item.productId === cartItem.productId &&
+      item.size === cartItem.size
+  );
+
+  if (existingIndex >= 0) {
+    updatedCart[existingIndex] = {
+      ...updatedCart[existingIndex],
+      quantity: updatedCart[existingIndex].quantity + 1,
     };
+  } else {
+    updatedCart.push(cartItem);
+  }
 
-    const updatedCart = [...cart];
-    const existingIndex = updatedCart.findIndex(
-      (item) =>
-        item.productId === cartItem.productId &&
-        item.size === cartItem.size
-    );
+  localStorage.setItem("chanez_cart", JSON.stringify(updatedCart));
+  setCart(updatedCart);
 
-    if (existingIndex >= 0) {
-      updatedCart[existingIndex] = {
-        ...updatedCart[existingIndex],
-        quantity: updatedCart[existingIndex].quantity + 1,
-      };
-    } else {
-      updatedCart.push(cartItem);
-    }
-
-    localStorage.setItem("chanez_cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
-
+  if (!String(product.id).startsWith("db-")) {
     try {
       const { error } = await supabase.rpc("record_cart_addition", {
         p_product_id: product.id,
@@ -388,9 +468,11 @@ export default function Collection() {
     } catch (error) {
       console.error("Could not record cart addition:", error);
     }
-
-    navigate("/cart");
   }
+
+  navigate("/cart");
+}
+
 
   return (
     <main className="collection" dir="rtl">
@@ -421,6 +503,13 @@ export default function Collection() {
       </header>
 
       <section className="collection__catalog">
+              {loadingProducts && (
+          <p role="status">جاري تحميل المنتجات...</p>
+        )}
+
+        {productsError && (
+          <p role="alert">{productsError}</p>
+        )}
         <div className="collection__toolbar">
           <div>
             <span className="collection__section-kicker">
@@ -523,7 +612,9 @@ export default function Collection() {
                         />
 
                         <span className="product-card__image-index">
-                          N° {String(Number(product.id.split("-")[1])).padStart(2, "0")}
+                          N° {String(
+  product.databaseId ?? product.id.split("-")[1]
+).padStart(2, "0")}
                         </span>
 
                         <span className="product-card__view">
