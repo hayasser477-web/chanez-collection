@@ -128,7 +128,7 @@ const legacyProducts = [
   {
     id: "chanez-7",
     model: "4 Ensemble Maria" ,
-    price: 5000,
+    price: 4800,
     description:
       "ensemble 3 pieces",
     sizes: ["38-40", "42-44", "46-48"],
@@ -136,31 +136,31 @@ const legacyProducts = [
   },
   {
     id: "chanez-8",
-    model: "5 ensemble ruby",
+    model: "5 ensemble RuBy",
     color: "Burgundy",
-    price: 4800,
+    price: 4700,
     description:
-      "ensemble ruby",
+      "ensemble ruBy",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image28, image29, image30],
   },
   {
     id: "chanez-9",
-    model: "5 ensemble ruby",
+    model: "5 ensemble RuBy",
     color: "bleu nuit",
-    price: 4800,
+    price: 4700,
     description:
-      "ensemble ruby",
+      "ensemble RuBy",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image31, image32, image33],
   },
   {
     id: "chanez-10",
-    model: "5 ensemble ruby",
+    model: "5 ensemble RuBy",
     color: "noir",
-    price: 4800,
+    price: 4700,
     description:
-      "ensemble ruby",
+      "ensemble RuBy",
     sizes: ["38-40", "42-44", "46-48"],
     images: [image34, image35, image36, image37],
   },
